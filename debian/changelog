@@ -1,0 +1,131 @@
+ayatana-ido (0.8.2-2) unstable; urgency=medium
+
+  * debian/control:
+    + Fix Vcs-Browser: field's URL. (Closes: #982638). Thanks to Sebastien
+      Bacher for spotting this.
+  * debian/copyright:
+    + Fix Upstream-Contact: field name (typo). (Closes: #987812).
+
+ -- Mike Gabriel <sunweaver@debian.org>  Sat, 12 Jun 2021 12:57:46 +0200
+
+ayatana-ido (0.8.2-1) unstable; urgency=medium
+
+  * New upstream release.
+  * debian/control:
+    + Bump Standards-Version: to 4.5.1. No changes needed.
+    + Apply wrap-and-sort -a -t.
+  * debian/libayatana-ido3-0.4-0.symbols:
+    + Update symbols.
+  * debian/copyright:
+    + Update auto-generated copyright.in template file.
+    + Update copyright attributions.
+  * debian/watch:
+    + Update format version to 4.
+
+ -- Mike Gabriel <sunweaver@debian.org>  Mon, 01 Feb 2021 16:55:19 +0100
+
+ayatana-ido (0.8.1-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Mike Gabriel <sunweaver@debian.org>  Mon, 09 Nov 2020 17:36:06 +0100
+
+ayatana-ido (0.8.0-1) unstable; urgency=medium
+
+  * New upstream release.
+  * debian/libayatana-ido3-0.4-0.symbols:
+    + Update file.
+  * debian/copyright:
+    + Update copyright attributions.
+
+ -- Mike Gabriel <sunweaver@debian.org>  Tue, 18 Aug 2020 08:31:51 +0200
+
+ayatana-ido (0.5.0-1) unstable; urgency=medium
+
+  * New upstream release. (Closes: #957031).
+  * debian/control:
+    + Bump Standards-Version: to 4.5.0. No changes needed.
+    + Bump DH compat level to version 13.
+  * debian/copyright:
+    + Update copyright attributions.
+
+ -- Mike Gabriel <sunweaver@debian.org>  Fri, 24 Jul 2020 06:56:11 +0200
+
+ayatana-ido (0.4.90-1) unstable; urgency=medium
+
+  * New upstream release.
+  * debian/{control,compat}:
+    + Switch to debhelper-compat notation. Bump DH compat level to version 12.
+  * debian/control:
+    + Bump Standards-Version: to 4.4.1. No changes needed.
+    + Add Rules-Requires-Root: field and set it to "no".
+  * debian/libayatana-ido3-0.4-0.symbols:
+    + Add *Build-Depends-Package: meta data field.
+  * debian/rules:
+    + Move --fail-missing parameter over from dh_install to dh_missing.
+
+ -- Mike Gabriel <sunweaver@debian.org>  Wed, 04 Dec 2019 21:49:36 +0100
+
+ayatana-ido (0.4.4-1) unstable; urgency=medium
+
+  * New upstream release (regression fix).
+    - Bringe SONAME back into .pc file name. Should fix FTBFS against
+      various packages build-depending on ayatana-ido.
+
+ -- Mike Gabriel <sunweaver@debian.org>  Mon, 13 Aug 2018 12:38:08 +0200
+
+ayatana-ido (0.4.3-1) unstable; urgency=medium
+
+  * New upstream release.
+  * debian/control (et al):
+    + Rename libayatana-ido3-0.4-dev to libayatana-ido3-dev.
+  * debian/control:
+    + Bump Standards-Version: to 4.2.0. No changes needed.
+  * debian/copyright:
+    + Use secure URI for copyright format reference.
+
+ -- Mike Gabriel <sunweaver@debian.org>  Mon, 13 Aug 2018 11:53:48 +0200
+
+ayatana-ido (0.4.2-2) unstable; urgency=medium
+
+  * debian/control:
+    + Update Vcs-*: fields. Packaging Git has been migrated to salsa.debian.org.
+    + Bump Standards-Version: to 4.1.5. No changes needed.
+    + Drop now unneeded B-D on dh-autoreconf. Not required since DH compat
+      level 10.
+  * debian/{control,compat}:
+    + Bump DH compat level to 11.
+  * debian/upstream/metadata:
+    + Comply with DEP-12.
+
+ -- Mike Gabriel <sunweaver@debian.org>  Mon, 16 Jul 2018 21:55:21 +0200
+
+ayatana-ido (0.4.2-1) unstable; urgency=medium
+
+  * New upstream release.
+  * debian/rules:
+    + White-space cleanup.
+  * debian/watch:
+    + Use secure URL to obtain upstream source.
+  * debian/*:
+    + Fix package naming scheme of gir1.2 bin:pkg to
+      make lintian and policy happy.
+
+ -- Mike Gabriel <sunweaver@debian.org>  Mon, 04 Dec 2017 16:21:17 +0100
+
+ayatana-ido (0.4.1-1) unstable; urgency=medium
+
+  * New upstream release.
+  * debian/watch: Update to new upstream URL.
+  * debian/control: Bump Standards-Version: to 4.1.0. No changes needed.
+  * debian/{control,copyright}: Update to new upstream URL.
+
+  * Upload to unstable.
+
+ -- Mike Gabriel <sunweaver@debian.org>  Sat, 16 Sep 2017 00:37:13 +0200
+
+ayatana-ido (0.4.0-1) experimental; urgency=medium
+
+  * Initial release to Debian. (Closes: #863121).
+
+ -- Mike Gabriel <sunweaver@debian.org>  Mon, 22 May 2017 13:27:47 +0200

@@ -1,0 +1,55 @@
+# vim: set ts=2 sts=2 sw=2 expandtab :
+dist: bionic
+language: shell
+os: linux
+
+arch:
+  - amd64
+  - ppc64le
+
+services:
+  - docker
+
+addons:
+  apt:
+    packages:
+      - python3-pip
+      - python3-setuptools
+
+before_install:
+  # let's use the MATE project's docker build scripts...
+  - curl -Ls -o docker-build https://github.com/mate-desktop/mate-dev-scripts/raw/master/travis/docker-build
+  - curl -Ls -o gen-index https://github.com/mate-desktop/mate-dev-scripts/raw/master/travis/gen-index.sh
+  - sed -i gen-index -e "s/mate-desktop.dev/ayatana-indicators.org/g"
+  - chmod +x docker-build gen-index
+
+install:
+  - pip3 install PyGithub
+  - ./docker-build --name ${DISTRO} --config .build.yml --install
+
+script:
+  - ./docker-build --name ${DISTRO} --verbose --config .build.yml --build scripts --build autotools
+
+env:
+  - DISTRO="archlinux:latest"
+  - DISTRO="debian:testing"
+  - DISTRO="fedora:latest"
+  - DISTRO="ubuntu:rolling"
+
+deploy:
+  - provider: pages
+    edge: true
+    token: ${GITHUB_TOKEN}
+    keep_history: true
+    committer_from_gh: true
+    target_branch: gh-pages
+    local_dir: html-report
+    strategy: git
+    on:
+      all_branches: true
+      condition: ${DISTRO} =~ ^fedora.*$
+
+jobs:
+  exclude:
+    - env: DISTRO="archlinux:latest"
+      arch: ppc64le
