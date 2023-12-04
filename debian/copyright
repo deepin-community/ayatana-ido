@@ -11,23 +11,17 @@ Files: src/ayatanamenuitemfactory.c
  src/idoalarmmenuitem.h
  src/idoapplicationmenuitem.c
  src/idoapplicationmenuitem.h
- src/idoappointmentmenuitem.c
  src/idoappointmentmenuitem.h
- src/idobasicmenuitem.c
- src/idobasicmenuitem.h
  src/idodetaillabel.c
  src/idodetaillabel.h
  src/idolocationmenuitem.c
  src/idolocationmenuitem.h
  src/idomediaplayermenuitem.c
  src/idomediaplayermenuitem.h
- src/idomenuitemfactory.c
  src/idoplaybackmenuitem.c
  src/idoplaybackmenuitem.h
- src/idoprogressmenuitem.c
  src/idoprogressmenuitem.h
  src/idoremovablemenuitem.c
- src/idoremovablemenuitem.h
  src/idosourcemenuitem.c
  src/idosourcemenuitem.h
  src/idoswitchmenuitem.c
@@ -42,27 +36,49 @@ Copyright: 2011, Canonical Ltd.
   2013, Canonical Ltd.
 License: GPL-3
 
+Files: src/idoappointmentmenuitem.c
+ src/idobasicmenuitem.c
+ src/idobasicmenuitem.h
+ src/idomenuitemfactory.c
+Copyright: 2013, Canonical Ltd.
+  2021, Robert Tari
+  2021-2022, Robert Tari
+  2023, Robert Tari
+License: GPL-3
+
+Files: src/idolevelmenuitem.c
+ src/idolevelmenuitem.h
+ src/idoprogressmenuitem.c
+Copyright: 2023, Robert Tari
+License: GPL-3
+
+Files: src/idoscalemenuitem.c
+Copyright: 2010, Canonical, Ltd.
+  2021, Robert Tari
+License: LGPL-2.1 or LGPL-3
+
 Files: .build.yml
  .travis.yml
+ AUTHORS
  AUTHORS.Canonical
- INSTALL
- Makefile.am
- Makefile.am.coverage
+ ChangeLog
+ CMakeLists.txt
+ INSTALL.md
  NEWS
  NEWS.Canonical
- autogen.sh
- configure.ac
- example/Makefile.am
+ README.md
+ data/CMakeLists.txt
+ data/libayatana-ido3-0.4.pc.in
+ example/CMakeLists.txt
  example/menus.c
- libayatana-ido3.pc.in
- m4/gcov.m4
- src/Makefile.am
- src/ido.list
+ src/CMakeLists.txt
+ src/idoremovablemenuitem.h
  src/idotypebuiltins.c.template
  src/idotypebuiltins.h.template
- tests/Makefile.am
+ tests/CMakeLists.txt
  tests/gtest-menuitems.cpp
 Copyright: 2010-2013, Canonical Ltd.
+  2021-2022, Robert Tari
 License: GPL-3 or LGPL-2.1 or LGPL-3
 Comment:
  Assuming same copyright holdership as the majority of the other code files.
@@ -70,20 +86,12 @@ Comment:
  Assuming alternative licensing scheme, i.e. that all license terms from
  the other code files are applicable to the files above.
 
-Files: AUTHORS
- ChangeLog
- README
- TODO
-Copyright: 2015-2017, Mike Gabriel <mike.gabriel@das-netzwerkteam.de>
-License: GPL-3 or LGPL-2.1 or LGPL-3
-
 Files: src/idocalendarmenuitem.c
  src/idocalendarmenuitem.h
  src/idoentrymenuitem.c
  src/idoentrymenuitem.h
  src/idorange.c
  src/idorange.h
- src/idoscalemenuitem.c
  src/idoscalemenuitem.h
  src/libayatana-ido.h
 Copyright: 2010, Canonical, Ltd.
@@ -94,6 +102,14 @@ Files: src/idotimeline.c
 Copyright: 2007, Carlos Garnacho <carlos@imendio.com>
 License: LGPL-2+
 
+Files: cmake/FindVala.cmake
+Copyright: 2011, Přemysl Janouch
+License: BSD-2-clause
+
+Files: cmake/FindGObjectIntrospection.cmake
+Copyright: 2010, Pino Toscano <pino@kde.org>
+License: BSD-3-clause
+
 Files: debian/*
 Copyright: 2010, Canonical Ltd.
            2010, Andrew Starr-Bochicchio <a.starr.b@gmail.com>
@@ -101,7 +117,7 @@ Copyright: 2010, Canonical Ltd.
 License: GPL-3
 
 Files: debian/patches/*
-Copyright: 2017, Mike Gabriel <mike.gabriel@das-netzwerkteam.de>
+Copyright: 2017-2023, Mike Gabriel <mike.gabriel@das-netzwerkteam.de>
 License: GPL-3 or LGPL-3 or LGPL-2.1
 
 License: GPL-3
@@ -172,3 +188,49 @@ License: LGPL-3
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  .
  See /usr/share/common-licenses/LGPL-3 for the full license text.
+
+License: BSD-2-clause
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+ .
+     * Redistributions of source code must retain the above copyright
+       notice, this list of conditions and the following disclaimer.
+     * Redistributions in binary form must reproduce the above copyright
+       notice, this list of conditions and the following disclaimer in the
+       documentation and/or other materials provided with the distribution.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
+ OF SUCH DAMAGE.
+
+License: BSD-3-clause
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ .
+   1. Redistributions of source code must retain the copyright
+      notice, this list of conditions and the following disclaimer.
+   2. Redistributions in binary form must reproduce the copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+   3. The name of the author may not be used to endorse or promote products
+      derived from this software without specific prior written permission.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+ INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.

@@ -1,5 +1,6 @@
 /*
  * Copyright 2013 Canonical Ltd.
+ * Copyright 2023 Robert Tari
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 3, as published
@@ -17,9 +18,8 @@
  *     Conor Curran <conor.curran@canonical.com>
  *     Mirco Müller <mirco.mueller@canonical.com>
  *     Lars Uebernickel <lars.uebernickel@canonical.com>
+ *     Robert Tari <robert@tari.in>
  */
-
-#include "config.h"
 
 #include "idomediaplayermenuitem.h"
 #include "idoactionhelper.h"

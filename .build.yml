@@ -3,27 +3,29 @@
 ##########################################################
 requires:
   archlinux:
-    - autoconf-archive
     - clang
     - gcc
     - git
-    - make
     - startup-notification
     - which
+    - cmake
+    - cmake-extras
     - glib2
     - gobject-introspection
     - gtk3
     - gtk-doc
-    - mate-common
     - vala
+    - lcov
+    - gcovr
 
   debian:
     # Useful URL: https://salsa.debian.org/debian-ayatana-team/ayatana-ido
-    - autopoint
     - clang
     - clang-tools
     - cppcheck
     - git
+    - cmake
+    - cmake-extras
     - gobject-introspection
     - gtk-doc-tools
     - libgirepository1.0-dev
@@ -32,37 +34,19 @@ requires:
     - libgtk-3-dev
     - libx11-dev
     - libxi-dev
-    - mate-common
     - valac
-
-  fedora:
-    - autoconf-archive
-    - cairo-gobject-devel
-    - clang-analyzer
-    - clang
-    - cppcheck-htmlreport
-    - dconf-devel
-    - desktop-file-utils
-    - gcc
-    - git
-    - redhat-rpm-config
-    - startup-notification-devel
-    - glib2-devel
-    - gobject-introspection-devel
-    - gtest-devel
-    - gtk-doc
-    - gtk3-devel
-    - libX11-devel
-    - libXi-devel
-    - make
-    - mate-common
-    - vala
+    - lcov
+    - gcovr
+    - xauth
+    - xvfb
 
   ubuntu:
-    - autopoint
     - clang
     - clang-tools
+    - cppcheck
     - git
+    - cmake
+    - cmake-extras
     - gobject-introspection
     - gtk-doc-tools
     - libgirepository1.0-dev
@@ -71,8 +55,11 @@ requires:
     - libgtk-3-dev
     - libx11-dev
     - libxi-dev
-    - mate-common
     - valac
+    - lcov
+    - gcovr
+    - xauth
+    - xvfb
 
 variables:
   - 'CHECKERS="
@@ -94,12 +81,19 @@ variables:
 
 build_scripts:
   - if [ ${DISTRO_NAME} == "debian" ];then
-  -     export CFLAGS+=" -Wsign-compare -Wunused-parameter"
   -     cppcheck --enable=warning,style,performance,portability,information,missingInclude .
   - fi
-
-  - NOCONFIGURE=1 ./autogen.sh
-  - scan-build $CHECKERS ./configure --prefix=/usr --enable-gtk-doc --enable-compile-warnings=maximum
+  -
+  - if [ -e ./CMakeLists.txt ]; then
+  -     if [ ${DISTRO_NAME} == "debian" ] || [ ${DISTRO_NAME} == "ubuntu" ]; then
+  -         scan-build $CHECKERS cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_VERBOSE_MAKEFILE=ON -DENABLE_WERROR=ON -DENABLE_TESTS=ON
+  -     else
+  -         scan-build $CHECKERS cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_VERBOSE_MAKEFILE=ON -DENABLE_WERROR=ON
+  -     fi
+  - else
+  -     exit 1
+  - fi
+  -
   - if [ $CPU_COUNT -gt 1 ]; then
   -     if [ ${DISTRO_NAME} == "debian" ];then
   -         scan-build $CHECKERS --keep-cc --use-cc=clang --use-c++=clang++ -o html-report make -j $CPU_COUNT
@@ -113,16 +107,9 @@ build_scripts:
   -     fi
   -     scan-build $CHECKERS --keep-cc -o html-report make
   - fi
-
-after_scripts:
-  - if [ ${BUILD_TYPE} == "scripts" ];then
-  -     if [ ${DISTRO_NAME} == "fedora" ];then
-  -         cppcheck --xml --output-file=cppcheck.xml --enable=warning,style,performance,portability,information,missingInclude .
-  -         cppcheck-htmlreport --title=${REPO_NAME} --file=cppcheck.xml --report-dir=cppcheck-htmlreport
-  -         ./gen-index -l 20 -i https://github.com/${OWNER_NAME}/${REPO_NAME}/raw/master/icons/16x16/apps/mate-desktop.png
+  - XVFB_RUN="$(which xvfb-run || true)"
+  - if [ ${DISTRO_NAME} == "debian" ] || [ ${DISTRO_NAME} == "ubuntu" ];then
+  -     if [ -e ./CMakeLists.txt ]; then
+  -         ${XVFB_RUN} make test
   -     fi
-  -     if [ ${DISTRO_NAME} == "debian" ];then
-  -         make check
-  -     fi
-  -     make distcheck
   - fi

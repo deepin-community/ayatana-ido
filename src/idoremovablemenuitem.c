@@ -1,8 +1,10 @@
 /*
  * Copyright 2013 Canonical Ltd.
+ * Copyright 2023 Robert Tari
  *
  * Authors:
  *   Charles Kerr <charles.kerr@canonical.com>
+ *   Robert Tari <robert@tari.in>
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 3, as published
@@ -16,10 +18,6 @@
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-#ifdef HAVE_CONFIG_H
- #include "config.h"
-#endif
 
 #include <gtk/gtk.h>
 
@@ -135,23 +133,8 @@ static void idoRemovableMenuItemStyleUpdateImage(IdoRemovableMenuItem *self)
     }
     else
     {
-        GtkIconInfo *pInfo;
-        const gchar *sFilename;
-
-        pInfo = gtk_icon_theme_lookup_by_gicon(gtk_icon_theme_get_default(), pPrivate->pIcon, 16, 0);
-        sFilename = gtk_icon_info_get_filename(pInfo);
-
-        if (sFilename)
-        {
-            GdkPixbuf *pPixbuf;
-
-            pPixbuf = gdk_pixbuf_new_from_file_at_scale(sFilename, -1, 16, TRUE, NULL);
-            gtk_image_set_from_pixbuf(GTK_IMAGE(pPrivate->pImage), pPixbuf);
-            g_object_unref (pPixbuf);
-        }
-
-        gtk_widget_set_visible(pPrivate->pImage, sFilename != NULL);
-        g_object_unref(pInfo);
+        gtk_image_set_from_gicon (GTK_IMAGE (pPrivate->pImage), pPrivate->pIcon, GTK_ICON_SIZE_MENU);
+        gtk_widget_set_visible (pPrivate->pImage, TRUE);
     }
 }
 
@@ -391,16 +374,14 @@ static void ido_removable_menu_item_init(IdoRemovableMenuItem *self)
     gtk_widget_set_valign(pPrivate->pButton, GTK_ALIGN_CENTER);
     gtk_widget_show(pPrivate->pButton);
 
-    GtkWidget *pWidget = gtk_grid_new();
-    GtkGrid *pGrid = GTK_GRID(pWidget);
-
-    gtk_grid_attach(pGrid, pPrivate->pImage, 0, 0, 1, 1);
-    gtk_grid_attach(pGrid, pPrivate->pLabel, 1, 0, 1, 1);
-    gtk_grid_attach(pGrid, pPrivate->pButton, 2, 0, 1, 1);
+    GtkWidget *pBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_box_pack_start(GTK_BOX(pBox), pPrivate->pImage, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(pBox), pPrivate->pLabel, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(pBox), pPrivate->pButton, FALSE, FALSE, 0);
     g_object_set(pPrivate->pImage, "halign", GTK_ALIGN_START, "hexpand", FALSE, "valign", GTK_ALIGN_CENTER, "margin-right", 6, NULL);
     g_object_set(pPrivate->pLabel, "halign", GTK_ALIGN_START, "hexpand", TRUE, "margin-right", 6, "valign", GTK_ALIGN_CENTER, NULL);
-    gtk_widget_show (pWidget);
-    gtk_container_add(GTK_CONTAINER(self), pWidget);
+    gtk_widget_show(pBox);
+    gtk_container_add(GTK_CONTAINER(self), pBox);
     g_signal_connect(pPrivate->pLabel, "activate-link", G_CALLBACK(onActivateLink), self);
 }
 
