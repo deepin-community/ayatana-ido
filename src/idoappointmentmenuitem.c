@@ -1,9 +1,11 @@
 /*
  * Copyright 2013 Canonical Ltd.
+ * Copyright 2021-2023 Robert Tari
  *
  * Authors:
  *   Charles Kerr <charles.kerr@canonical.com>
  *   Ted Gould <ted@canonical.com>
+ *   Robert Tari <robert@tari.in>
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 3, as published
@@ -17,10 +19,6 @@
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-#ifdef HAVE_CONFIG_H
- #include "config.h"
-#endif
 
 #include <gtk/gtk.h>
 
@@ -108,7 +106,7 @@ ido_appointment_menu_item_new_from_model (GMenuItem    * menu_item,
 
   if (g_menu_item_get_attribute (menu_item, "x-ayatana-color", "s", &str))
     {
-      names[n] = "icon";
+      names[n] = "pixbuf";
       g_value_init (&values[n], G_TYPE_OBJECT);
       g_value_take_object (&values[n], create_color_icon_pixbuf (str));
       g_free(str);
@@ -138,6 +136,7 @@ ido_appointment_menu_item_new_from_model (GMenuItem    * menu_item,
   for (i=0; i<n; i++)
     g_value_unset (&values[i]);
 
+  g_free (values);
 
   /* add an ActionHelper */
 

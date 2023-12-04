@@ -1,8 +1,10 @@
 /*
  * Copyright 2013 Canonical Ltd.
+ * Copyright 2021-2023 Robert Tari
  *
  * Authors:
  *   Charles Kerr <charles.kerr@canonical.com>
+ *   Robert Tari <robert@tari.in>
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 3, as published
@@ -17,12 +19,8 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef HAVE_CONFIG_H
- #include "config.h"
-#endif
-
 #include <gtk/gtk.h>
-
+#include "idodetaillabel.h"
 #include "idoactionhelper.h"
 #include "idobasicmenuitem.h"
 
@@ -30,6 +28,7 @@ enum
 {
   PROP_0,
   PROP_ICON,
+  PROP_PIXBUF,
   PROP_TEXT,
   PROP_SECONDARY_TEXT,
   PROP_LAST
@@ -39,6 +38,7 @@ static GParamSpec *properties[PROP_LAST];
 
 typedef struct {
   GIcon * icon;
+  GdkPixbuf *pPixbuf;
   char * text;
   char * secondary_text;
 
@@ -66,6 +66,10 @@ my_get_property (GObject     * o,
     {
       case PROP_ICON:
         g_value_set_object (value, p->icon);
+        break;
+
+      case PROP_PIXBUF:
+        g_value_set_object(value, p->pPixbuf);
         break;
 
       case PROP_TEXT:
@@ -96,6 +100,10 @@ my_set_property (GObject       * o,
         ido_basic_menu_item_set_icon (self, g_value_get_object (value));
         break;
 
+      case PROP_PIXBUF:
+        ido_basic_menu_item_set_pixbuf(self, g_value_get_object(value));
+        break;
+
       case PROP_TEXT:
         ido_basic_menu_item_set_text (self, g_value_get_string (value));
         break;
@@ -117,6 +125,8 @@ my_dispose (GObject * object)
   IdoBasicMenuItemPrivate *p = ido_basic_menu_item_get_instance_private(self);
 
   g_clear_object (&p->icon);
+  g_clear_object (&p->pPixbuf);
+  g_clear_object (&p->secondary_label);
 
   G_OBJECT_CLASS (ido_basic_menu_item_parent_class)->dispose (object);
 }
@@ -140,31 +150,22 @@ ido_basic_menu_item_update_image (IdoBasicMenuItem *self)
 
   gtk_image_clear (GTK_IMAGE (p->image));
 
-  if (p->icon == NULL)
+  if (p->icon == NULL && p->pPixbuf == NULL)
     {
       gtk_widget_set_visible (p->image, FALSE);
     }
   else
     {
-      GtkIconInfo *info;
-      const gchar *filename;
-
-      info = gtk_icon_theme_lookup_by_gicon (gtk_icon_theme_get_default (), p->icon, 16, 0);
-      filename = gtk_icon_info_get_filename (info);
-
-      if (filename)
+        if (p->pPixbuf)
         {
-          GdkPixbuf *pixbuf;
-
-          pixbuf = gdk_pixbuf_new_from_file_at_scale (filename, -1, 16, TRUE, NULL);
-          gtk_image_set_from_pixbuf (GTK_IMAGE (p->image), pixbuf);
-
-          g_object_unref (pixbuf);
+            gtk_image_set_from_pixbuf(GTK_IMAGE(p->image), p->pPixbuf);
+            gtk_widget_set_visible(p->image, TRUE);
         }
-
-      gtk_widget_set_visible (p->image, filename != NULL);
-
-      g_object_unref (info);
+        else if (p->icon)
+        {
+            gtk_image_set_from_gicon (GTK_IMAGE (p->image), p->icon, GTK_ICON_SIZE_MENU);
+            gtk_widget_set_visible (p->image, TRUE);
+        }
     }
 }
 
@@ -205,6 +206,12 @@ ido_basic_menu_item_class_init (IdoBasicMenuItemClass *klass)
                                                G_TYPE_OBJECT,
                                                prop_flags);
 
+  properties[PROP_PIXBUF] = g_param_spec_object ("pixbuf",
+                                               "Pixbuf",
+                                               "The menuitem's GdkPixbuf",
+                                               G_TYPE_OBJECT,
+                                               prop_flags);
+
   properties[PROP_TEXT] = g_param_spec_string ("text",
                                                "Text",
                                                "The menuitem's text",
@@ -235,9 +242,10 @@ ido_basic_menu_item_init (IdoBasicMenuItem *self)
   p->label = gtk_label_new ("");
     gtk_widget_set_halign(p->label, GTK_ALIGN_START);
     gtk_widget_set_valign(p->label, GTK_ALIGN_CENTER);
-  p->secondary_label = gtk_label_new ("");
+    p->secondary_label = g_object_ref (ido_detail_label_new (""));
     gtk_widget_set_halign(p->secondary_label, GTK_ALIGN_END);
     gtk_widget_set_valign(p->secondary_label, GTK_ALIGN_CENTER);
+    gtk_style_context_add_class (gtk_widget_get_style_context (p->secondary_label), "accelerator");
 
   w = gtk_grid_new ();
   grid = GTK_GRID (w);
@@ -293,6 +301,22 @@ ido_basic_menu_item_set_icon (IdoBasicMenuItem * self, GIcon * icon)
     }
 }
 
+void ido_basic_menu_item_set_pixbuf(IdoBasicMenuItem *self, GdkPixbuf *pPixbuf)
+{
+    IdoBasicMenuItemPrivate *pPrivate = ido_basic_menu_item_get_instance_private(self);
+
+    if (pPrivate->pPixbuf != pPixbuf)
+    {
+        if (pPrivate->pPixbuf)
+        {
+            g_object_unref(pPrivate->pPixbuf);
+        }
+
+        pPrivate->pPixbuf = pPixbuf ? g_object_ref(pPixbuf) : NULL;
+        ido_basic_menu_item_update_image(self);
+    }
+}
+
 void
 ido_basic_menu_item_set_icon_from_file (IdoBasicMenuItem * self, const char * filename)
 {
@@ -331,12 +355,25 @@ ido_basic_menu_item_set_secondary_text (IdoBasicMenuItem * self, const char * se
     {
       g_free (p->secondary_text);
       p->secondary_text = g_strdup (secondary_text);
-
-      g_object_set (G_OBJECT(p->secondary_label),
-                    "label", p->secondary_text,
-                    "visible", (gboolean)(p->secondary_text && *p->secondary_text),
-                    NULL);
+      ido_detail_label_set_text (IDO_DETAIL_LABEL (p->secondary_label), p->secondary_text);
+      gtk_widget_set_visible (p->secondary_label, (gboolean)(p->secondary_text && *p->secondary_text));
     }
+}
+
+void ido_basic_menu_item_set_secondary_count (IdoBasicMenuItem *self, gint nCount)
+{
+    IdoBasicMenuItemPrivate *pPrivate = ido_basic_menu_item_get_instance_private (self);
+    gchar *sSecondaryText = g_strdup_printf("%i", nCount);
+
+    if (g_strcmp0 (pPrivate->secondary_text, sSecondaryText))
+    {
+        g_free (pPrivate->secondary_text);
+        pPrivate->secondary_text = g_strdup (sSecondaryText);
+        ido_detail_label_set_count (IDO_DETAIL_LABEL (pPrivate->secondary_label), nCount);
+        gtk_widget_set_visible (pPrivate->secondary_label, (gboolean)(pPrivate->secondary_text && *pPrivate->secondary_text));
+    }
+
+    g_free (sSecondaryText);
 }
 
 static void
@@ -369,6 +406,21 @@ ido_basic_menu_item_new_from_model (GMenuItem    * menu_item,
     {
       ido_basic_menu_item_set_text (IDO_BASIC_MENU_ITEM (item), label);
       g_free (label);
+    }
+
+    gchar *sSecondaryText;
+
+    if (g_menu_item_get_attribute (menu_item, "x-ayatana-secondary-text", "s", &sSecondaryText))
+    {
+        ido_basic_menu_item_set_secondary_text (IDO_BASIC_MENU_ITEM (item), sSecondaryText);
+        g_free (sSecondaryText);
+    }
+
+    guint nSecondaryCount;
+
+    if (g_menu_item_get_attribute (menu_item, "x-ayatana-secondary-count", "i", &nSecondaryCount))
+    {
+        ido_basic_menu_item_set_secondary_count (IDO_BASIC_MENU_ITEM (item), nSecondaryCount);
     }
 
   serialized_icon = g_menu_item_get_attribute_value (menu_item, "icon", NULL);

@@ -1,5 +1,6 @@
 /*
  * Copyright 2013 Canonical Ltd.
+ * Copyright 2023 Robert Tari
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 3, as published
@@ -15,6 +16,7 @@
  *
  * Authors:
  *     Lars Uebernickel <lars.uebernickel@canonical.com>
+ *     Robert Tari <robert@tari.in>
  */
 
 #include <gtk/gtk.h>
@@ -33,6 +35,7 @@
 #include "idoswitchmenuitem.h"
 #include "idoprogressmenuitem.h"
 #include "idoremovablemenuitem.h"
+#include "idolevelmenuitem.h"
 
 #define IDO_TYPE_MENU_ITEM_FACTORY         (ido_menu_item_factory_get_type ())
 #define IDO_MENU_ITEM_FACTORY(o)           (G_TYPE_CHECK_INSTANCE_CAST ((o), IDO_TYPE_MENU_ITEM_FACTORY, IdoMenuItemFactory))
@@ -57,10 +60,10 @@ ido_menu_item_factory_create_menu_item (AyatanaMenuItemFactory *factory,
 {
   GtkMenuItem *item = NULL;
 
-  if (g_str_equal (type, "indicator.user-menu-item"))
+  if (g_str_equal (type, "org.ayatana.indicator.user-menu-item"))
     item = ido_user_menu_item_new_from_model (menuitem, actions);
 
-  if (g_str_equal (type, "indicator.guest-menu-item"))
+  if (g_str_equal (type, "org.ayatana.indicator.guest-menu-item"))
     item = ido_guest_menu_item_new_from_model (menuitem, actions);
 
   else if (g_str_equal (type, "org.ayatana.indicator.calendar"))
@@ -81,16 +84,16 @@ ido_menu_item_factory_create_menu_item (AyatanaMenuItemFactory *factory,
   else if (g_str_equal (type, "org.ayatana.indicator.progress"))
     item = ido_progress_menu_item_new_from_model (menuitem, actions);
 
-  else if (g_str_equal (type, "org.ayatana.unity.slider"))
+  else if (g_str_equal (type, "org.ayatana.indicator.slider"))
     item = ido_scale_menu_item_new_from_model (menuitem, actions);
 
-  else if (g_str_equal (type, "org.ayatana.unity.media-player"))
+  else if (g_str_equal (type, "org.ayatana.indicator.media-player"))
     item = ido_media_player_menu_item_new_from_model (menuitem, actions);
 
-  else if (g_str_equal (type, "org.ayatana.unity.playback-item"))
+  else if (g_str_equal (type, "org.ayatana.indicator.playback-item"))
     item = ido_playback_menu_item_new_from_model (menuitem, actions);
 
-  else if (g_str_equal (type, "org.ayatana.application"))
+  else if (g_str_equal (type, "org.ayatana.indicator.application"))
     item = ido_application_menu_item_new_from_model (menuitem, actions);
 
   else if (g_str_equal (type, "org.ayatana.indicator.messages.source"))
@@ -101,6 +104,9 @@ ido_menu_item_factory_create_menu_item (AyatanaMenuItemFactory *factory,
 
   else if (g_str_equal (type, "org.ayatana.indicator.removable"))
     item = ido_removable_menu_item_new_from_model (menuitem, actions);
+
+  else if (g_str_equal (type, "org.ayatana.indicator.level"))
+    item = ido_level_menu_item_new_from_model (menuitem, actions);
 
   return item;
 }

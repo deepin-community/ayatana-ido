@@ -1,10 +1,12 @@
 /*
 Copyright 2011 Canonical Ltd.
+Copyright 2023 Robert Tari
 
 Authors:
     Conor Curran <conor.curran@canonical.com>
     Mirco Müller <mirco.mueller@canonical.com>
     Charles Kerr <charles.kerr@canonical.com>
+    Robert Tari <robert@tari.in>
 
 This program is free software: you can redistribute it and/or modify it
 under the terms of the GNU General Public License version 3, as published
@@ -18,10 +20,6 @@ PURPOSE.  See the GNU General Public License for more details.
 You should have received a copy of the GNU General Public License along
 with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-#ifdef HAVE_CONFIG_H
- #include "config.h"
-#endif
 
 #include <gtk/gtk.h>
 
@@ -401,7 +399,7 @@ ido_user_menu_item_new (void)
 
 /*
  * This is a helper function for creating user menuitems for both
- * "indicator.user-menu-item" and "indicator.guest-menu-item",
+ * "org.ayatana.indicator.user-menu-item" and "org.ayatana.indicator.guest-menu-item",
  * since they only differ in how they use their action's state.
  */
 static GtkMenuItem *
@@ -449,6 +447,8 @@ user_menu_item_new_from_model (GMenuItem    * menuitem,
   for (i=0; i<n; i++)
     g_value_unset (&values[i]);
 
+  g_free (values);
+
   /* gie it an ActionHelper */
 
   if (g_menu_item_get_attribute (menuitem, G_MENU_ATTRIBUTE_ACTION, "s", &action))
@@ -476,7 +476,7 @@ user_menu_item_new_from_model (GMenuItem    * menuitem,
 }
 
 /***
-****  indicator.user-menu-item handler
+****  org.ayatana.indicator.user-menu-item handler
 ***/
 
 /**
@@ -550,7 +550,7 @@ ido_user_menu_item_new_from_model (GMenuItem    *menuitem,
 }
 
 /***
-****  indicator.guest-menu-item handler
+****  org.ayatana.indicator.guest-menu-item handler
 ***/
 
 static void
