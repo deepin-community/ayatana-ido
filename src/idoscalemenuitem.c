@@ -1,6 +1,6 @@
 /*
  * Copyright 2010 Canonical, Ltd.
- * Copyright 2021 Robert Tari
+ * Copyright 2021-2024 Robert Tari
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of either or both of the following licenses:
@@ -26,6 +26,7 @@
  */
 
 #include <gtk/gtk.h>
+#include <math.h>
 #include "idorange.h"
 #include "idoscalemenuitem.h"
 #include "idotypebuiltins.h"
@@ -77,6 +78,7 @@ typedef struct {
   IdoRangeStyle         range_style;
   gboolean              ignore_value_changed;
   gboolean              has_focus;
+  gboolean              bCloseOnChange;
 } IdoScaleMenuItemPrivate;
 
 enum {
@@ -142,8 +144,16 @@ ido_scale_menu_item_scale_value_changed (GtkRange *range,
   /* The signal is not sent when it was set through
    * ido_scale_menu_item_set_value().  */
 
-  if (!priv->ignore_value_changed)
-    g_signal_emit (self, signals[VALUE_CHANGED], 0, gtk_range_get_value (range));
+    if (!priv->ignore_value_changed)
+    {
+        g_signal_emit (self, signals[VALUE_CHANGED], 0, gtk_range_get_value (range));
+
+        if (priv->bCloseOnChange)
+        {
+            GtkWidget *pParent = gtk_widget_get_parent (GTK_WIDGET (self));
+            gtk_menu_shell_deactivate (GTK_MENU_SHELL (pParent));
+        }
+    }
 }
 
 static void
@@ -366,7 +376,7 @@ static void
 ido_scale_menu_item_init (IdoScaleMenuItem *self)
 {
   IdoScaleMenuItemPrivate *priv = ido_scale_menu_item_get_instance_private (self);
-
+  priv->bCloseOnChange = FALSE;
   priv->reverse_scroll = TRUE;
 
   gtk_widget_set_size_request (GTK_WIDGET (self), 200, -1);
@@ -474,8 +484,6 @@ ido_scale_menu_item_select (GtkMenuItem *item)
 
   priv->has_focus = TRUE;
   gtk_widget_set_state_flags (priv->scale, GTK_STATE_FLAG_FOCUSED, FALSE);
-
-  GTK_MENU_ITEM_CLASS (ido_scale_menu_item_parent_class)->select (item);
 }
 
 static void
@@ -486,8 +494,6 @@ ido_scale_menu_item_deselect (GtkMenuItem *item)
 
   priv->has_focus = FALSE;
   gtk_widget_unset_state_flags (priv->scale, GTK_STATE_FLAG_FOCUSED);
-
-  GTK_MENU_ITEM_CLASS (ido_scale_menu_item_parent_class)->deselect (item);
 }
 
 static gboolean
@@ -701,7 +707,7 @@ ido_scale_menu_item_new_with_range (const gchar  *label,
                                     gdouble       max,
                                     gdouble       step)
 {
-  GObject *adjustment = G_OBJECT (gtk_adjustment_new (value, min, max, step, 10 * step, 0));
+  GObject *adjustment = G_OBJECT (gtk_adjustment_new (value, min, max, step, step, 0));
 
   return GTK_WIDGET (g_object_new (IDO_TYPE_SCALE_MENU_ITEM,
                                   "label",       label,
@@ -1048,6 +1054,13 @@ menu_item_get_icon (GMenuItem   *menuitem,
   return value ? g_icon_deserialize (value) : NULL;
 }
 
+static gchar* onFormatValue (GtkScale *pScale, gdouble fValue)
+{
+    gint nValue = fValue * 100;
+    gchar *sValue = g_strdup_printf ("%i%%", nValue);
+
+    return sValue;
+}
 /**
  * ido_scale_menu_item_new_from_model:
  *
@@ -1089,6 +1102,32 @@ ido_scale_menu_item_new_from_model (GMenuItem    *menuitem,
       g_free (action);
     }
 
+  IdoScaleMenuItemPrivate *pPrivate = ido_scale_menu_item_get_instance_private (IDO_SCALE_MENU_ITEM (item));
+  guchar nDigits = 0;
+  gboolean bFound = g_menu_item_get_attribute (menuitem, "digits", "y", &nDigits);
+
+  if (bFound)
+  {
+        gtk_scale_set_digits (GTK_SCALE (pPrivate->scale), nDigits);
+        gtk_range_set_round_digits (GTK_RANGE (pPrivate->scale), nDigits);
+  }
+
+  gboolean bMarks = FALSE;
+  bFound = g_menu_item_get_attribute (menuitem, "marks", "b", &bMarks);
+
+  if (bFound)
+  {
+        gtk_scale_set_draw_value (GTK_SCALE (pPrivate->scale), TRUE);
+
+        for (gdouble fValue = min; fValue < (max + step); fValue += step)
+        {
+            gtk_scale_add_mark (GTK_SCALE (pPrivate->scale), round (fValue * 10) / 10, GTK_POS_BOTTOM, NULL);
+        }
+
+        g_signal_connect (pPrivate->scale, "format-value", G_CALLBACK (onFormatValue), NULL);
+  }
+
+  g_menu_item_get_attribute (menuitem, "close-on-change", "b", &pPrivate->bCloseOnChange);
   min_icon = menu_item_get_icon (menuitem, "min-icon");
   max_icon = menu_item_get_icon (menuitem, "max-icon");
   ido_scale_menu_item_set_icons (IDO_SCALE_MENU_ITEM (item), min_icon, max_icon);
