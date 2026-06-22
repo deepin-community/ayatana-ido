@@ -7,28 +7,22 @@ Files: src/ayatanamenuitemfactory.c
  src/ayatanamenuitemfactory.h
  src/idoactionhelper.c
  src/idoactionhelper.h
- src/idoalarmmenuitem.c
  src/idoalarmmenuitem.h
  src/idoapplicationmenuitem.c
  src/idoapplicationmenuitem.h
  src/idoappointmentmenuitem.h
  src/idodetaillabel.c
  src/idodetaillabel.h
- src/idolocationmenuitem.c
  src/idolocationmenuitem.h
- src/idomediaplayermenuitem.c
  src/idomediaplayermenuitem.h
- src/idoplaybackmenuitem.c
  src/idoplaybackmenuitem.h
  src/idoprogressmenuitem.h
- src/idoremovablemenuitem.c
  src/idosourcemenuitem.c
  src/idosourcemenuitem.h
  src/idoswitchmenuitem.c
  src/idoswitchmenuitem.h
  src/idotimestampmenuitem.c
  src/idotimestampmenuitem.h
- src/idousermenuitem.c
  src/idousermenuitem.h
  src/libayatana-ido.c
 Copyright: 2011, Canonical Ltd.
@@ -36,14 +30,31 @@ Copyright: 2011, Canonical Ltd.
   2013, Canonical Ltd.
 License: GPL-3
 
-Files: src/idoappointmentmenuitem.c
+Files: src/idoalarmmenuitem.c
+ src/idoappointmentmenuitem.c
  src/idobasicmenuitem.c
  src/idobasicmenuitem.h
+ src/idolocationmenuitem.c
+ src/idomediaplayermenuitem.c
  src/idomenuitemfactory.c
-Copyright: 2013, Canonical Ltd.
+ src/idoplaybackmenuitem.c
+ src/idoremovablemenuitem.c
+ src/idousermenuitem.c
+Copyright: 2011, Canonical Ltd.
+  2013, Canonical Ltd.
   2021, Robert Tari
-  2021-2022, Robert Tari
+  2021-2023, Robert Tari
   2023, Robert Tari
+License: GPL-3
+
+Files: src/idocalendarmenuitem.c
+ src/idocalendarmenuitem.h
+ src/idoentrymenuitem.c
+ src/idoentrymenuitem.h
+ src/idorange.c
+ src/idorange.h
+ src/libayatana-ido.h
+Copyright: 2010, Canonical, Ltd.
 License: GPL-3
 
 Files: src/idolevelmenuitem.c
@@ -52,10 +63,27 @@ Files: src/idolevelmenuitem.c
 Copyright: 2023, Robert Tari
 License: GPL-3
 
+Files: src/idotimeline.c
+ src/idotimeline.h
+Copyright: 2007, Carlos Garnacho <carlos@imendio.com>
+License: LGPL-2+
+
 Files: src/idoscalemenuitem.c
 Copyright: 2010, Canonical, Ltd.
-  2021, Robert Tari
+  2021-2024, Robert Tari
 License: LGPL-2.1 or LGPL-3
+
+Files: src/idoscalemenuitem.h
+Copyright: 2010, Canonical, Ltd.
+License: LGPL-2.1 or LGPL-3
+
+Files: cmake/FindVala.cmake
+Copyright: 2011, Přemysl Janouch
+License: BSD-2-clause
+
+Files: cmake/FindGObjectIntrospection.cmake
+Copyright: 2010, Pino Toscano <pino@kde.org>
+License: BSD-3-clause
 
 Files: .build.yml
  .travis.yml
@@ -85,30 +113,6 @@ Comment:
  .
  Assuming alternative licensing scheme, i.e. that all license terms from
  the other code files are applicable to the files above.
-
-Files: src/idocalendarmenuitem.c
- src/idocalendarmenuitem.h
- src/idoentrymenuitem.c
- src/idoentrymenuitem.h
- src/idorange.c
- src/idorange.h
- src/idoscalemenuitem.h
- src/libayatana-ido.h
-Copyright: 2010, Canonical, Ltd.
-License: LGPL-2.1 or LGPL-3
-
-Files: src/idotimeline.c
- src/idotimeline.h
-Copyright: 2007, Carlos Garnacho <carlos@imendio.com>
-License: LGPL-2+
-
-Files: cmake/FindVala.cmake
-Copyright: 2011, Přemysl Janouch
-License: BSD-2-clause
-
-Files: cmake/FindGObjectIntrospection.cmake
-Copyright: 2010, Pino Toscano <pino@kde.org>
-License: BSD-3-clause
 
 Files: debian/*
 Copyright: 2010, Canonical Ltd.

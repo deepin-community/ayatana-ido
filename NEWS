@@ -1,3 +1,20 @@
+Overview of changes in ayatana-ido 0.10.4
+
+  - src/idoscalemenuitem.c: Disable menu item selection
+  - src/idoscalemenuitem.c: Add ability to close the menu when the
+    slider's value changes.
+
+Overview of changes in ayatana-ido 0.10.3
+
+  - src/idoswitchmenuitem.c: Allow the switch to display an
+    accelerator.
+
+Overview of changes in ayatana-ido 0.10.2
+
+  - src/idoscalemenuitem.c: Make page increment same as step increment.
+  - src/idoscalemenuitem.c: Add new functionality via the digits and
+    marks parameters.
+
 Overview of changes in ayatana-ido 0.10.1
 
   - src/idoalarmmenuitem.c: Do not free non memory-allocated variable

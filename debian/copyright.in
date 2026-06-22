@@ -42,33 +42,45 @@ Files: src/ayatanamenuitemfactory.c
  src/ayatanamenuitemfactory.h
  src/idoactionhelper.c
  src/idoactionhelper.h
- src/idoalarmmenuitem.c
  src/idoalarmmenuitem.h
  src/idoapplicationmenuitem.c
  src/idoapplicationmenuitem.h
  src/idoappointmentmenuitem.h
  src/idodetaillabel.c
  src/idodetaillabel.h
- src/idolocationmenuitem.c
  src/idolocationmenuitem.h
- src/idomediaplayermenuitem.c
  src/idomediaplayermenuitem.h
- src/idoplaybackmenuitem.c
  src/idoplaybackmenuitem.h
  src/idoprogressmenuitem.h
- src/idoremovablemenuitem.c
  src/idosourcemenuitem.c
  src/idosourcemenuitem.h
  src/idoswitchmenuitem.c
  src/idoswitchmenuitem.h
  src/idotimestampmenuitem.c
  src/idotimestampmenuitem.h
- src/idousermenuitem.c
  src/idousermenuitem.h
  src/libayatana-ido.c
 Copyright: 2011, Canonical Ltd.
   2012, Canonical Ltd.
   2013, Canonical Ltd.
+License: GPL-3
+ FIXME
+
+Files: src/idoalarmmenuitem.c
+ src/idoappointmentmenuitem.c
+ src/idobasicmenuitem.c
+ src/idobasicmenuitem.h
+ src/idolocationmenuitem.c
+ src/idomediaplayermenuitem.c
+ src/idomenuitemfactory.c
+ src/idoplaybackmenuitem.c
+ src/idoremovablemenuitem.c
+ src/idousermenuitem.c
+Copyright: 2011, Canonical Ltd.
+  2013, Canonical Ltd.
+  2021, Robert Tari
+  2021-2023, Robert Tari
+  2023, Robert Tari
 License: GPL-3
  FIXME
 
@@ -82,17 +94,6 @@ Files: src/idocalendarmenuitem.c
  src/libayatana-ido.h
 Copyright: 2010, Canonical, Ltd.
 License: UNKNOWN
- FIXME
-
-Files: src/idoappointmentmenuitem.c
- src/idobasicmenuitem.c
- src/idobasicmenuitem.h
- src/idomenuitemfactory.c
-Copyright: 2013, Canonical Ltd.
-  2021, Robert Tari
-  2021-2022, Robert Tari
-  2023, Robert Tari
-License: GPL-3
  FIXME
 
 Files: src/idolevelmenuitem.c
@@ -121,19 +122,29 @@ Copyright: 2007, Carlos Garnacho <carlos@imendio.com>
   2010-2013, Canonical Ltd.
   2011, Canonical Ltd.
   2011, Přemysl Janouch
-  2013, Canonical Ltd.
   2017-2023, Mike Gabriel <mike.gabriel@das-netzwerkteam.de>
+  2023, Robert Tari
   holdership as the majority of the other code files.
 License: BSD-2-clause and/or BSD-3-clause and/or BSD-3-clause and/or GPL-3 and/or LGPL-2+ and/or LGPL-2.1 and/or LGPL-3
  FIXME
 
-Files: COPYING.LGPL.2.1
+Files: COPYING.GPL-3
+Copyright: 2007, Free Software Foundation, Inc. <https://fsf.org/>
+License: GPL-3
+ FIXME
+
+Files: COPYING.LGPL-2
+Copyright: 1991, Free Software Foundation, Inc.
+License: LGPL-2
+ FIXME
+
+Files: COPYING.LGPL-2.1
 Copyright: 1991, 1999, Free Software Foundation, Inc.
 License: LGPL-2.1
  FIXME
 
-Files: COPYING
-Copyright: 2007, Free Software Foundation, Inc. <http://fsf.org/>
+Files: COPYING.LGPL-3
+Copyright: 2007, Free Software Foundation, Inc. <https://fsf.org/>
 License: LGPL-3
  FIXME
 
@@ -150,7 +161,7 @@ License: UNKNOWN
 
 Files: src/idoscalemenuitem.c
 Copyright: 2010, Canonical, Ltd.
-  2021, Robert Tari
+  2021-2024, Robert Tari
 License: UNKNOWN
  FIXME
 
